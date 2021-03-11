@@ -25,4 +25,10 @@ public interface UserMapper {
     int findUserByCount(User user);
 
     User findUserByIdResultMap(int i);
+
+    List<User> selectUserByList(List<User> userList);
+
+    List<User> selectUserByArray(Object[] userlist);
+
+    List<User> selectUserByArrayString(Object[] userlist);
 }

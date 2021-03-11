@@ -20,8 +20,30 @@
         values(#{username},#{birthday},#{sex},#{address})
     </insert>
     <!--用户综合信息查询用户列表-->
-    <select id="findUserList" parameterType="com.bh.pojo.UserQueryVo" resultType="com.bh.pojo.User">
+    <!--<select id="findUserList" parameterType="com.bh.pojo.UserQueryVo" resultType="com.bh.pojo.User">
         select * from user where username=#{user.username} and sex=#{user.sex}
+    </select>-->
+    <!--用户综合信息查询用户列表————动态sql拼接-->
+    <select id="findUserList" parameterType="com.bh.pojo.UserQueryVo" resultType="com.bh.pojo.User">
+        select * from user
+        /*where 1=1*/
+        <where>
+        <!--<if test="ids!=null and ids.size>0">
+            <foreach collection="ids" open="and id in(" close=")" item="id" separator=",">
+                #{id}
+            </foreach>
+        </if>-->
+
+            <if test="userCustom!=null">
+
+                <if test="userCustom.sex!=null and userCustom.sex!=''">
+                    and user.sex=#{userCustom.sex}
+                </if>
+                <if test="userCustom.username!=null and userCustom.username!=''">
+                    and user.username like '%${userCustom.username}%'
+                </if>
+            </if>
+        </where>
     </select>
     <!--传递 HashMap 综合查询用户信息-->
     <select id="findUserByHashMap" parameterType="java.util.Map" resultType="com.bh.pojo.User">
@@ -39,6 +61,45 @@
     </resultMap>
     <select id="findUserByIdResultMap" parameterType="com.bh.pojo.User" resultMap="userListResultMap">
         select id id_,username username_,birthday birthday_ from user where id=#{value}
+    </select>
+    <!--传递数组综合查询用户信息___传递单个 List-->
+    <select id="selectUserByList" parameterType="java.util.List" resultType="com.bh.pojo.User">
+        select * from user
+        <where>
+            <if test="list!=null">
+                <foreach collection="list" item="item" open="and id in(" separator="," close=")">
+                    #{item.id}
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+    <!--传递数组综合查询用户信息___单个数组（数组中是 pojo)-->
+    <!-- 传递数组综合查询用户信息 -->
+    <select id="selectUserByArray" parameterType="Object[]" resultType="com.bh.pojo.User">
+        select * from user
+        <where>
+            <!-- 传递数组 -->
+            <if test="array!=null">
+                <foreach collection="array" index="index" item="item" open="and id in(" separator="," close=")">
+                    #{item.id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    
+    <!-- 传递数组综合查询用户信息————数组中是字符串类型 -->
+    <!-- 传递数组综合查询用户信息 -->
+    <select id="selectUserByArrayString" parameterType="Object[]" resultType="com.bh.pojo.User">
+        select * from user
+        <where>
+            <!-- 传递数组 -->
+            <if test="array!=null">
+                <foreach collection="array" index="index" item="item" open="and id in(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
     </select>
 
 </mapper>

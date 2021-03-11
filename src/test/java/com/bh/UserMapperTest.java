@@ -2,6 +2,7 @@ package com.bh;
 
 import com.bh.dao.impl.UserMapper;
 import com.bh.pojo.User;
+import com.bh.pojo.UserCustom;
 import com.bh.pojo.UserQueryVo;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -82,6 +83,7 @@ public class UserMapperTest {
         }
     }
     //传递 pojo 包装对象
+    //用户信息综合查询即多条件查询
     @Test
     public void testFindUserList(){
         //获取sqlSession
@@ -90,16 +92,20 @@ public class UserMapperTest {
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
         //创建包装对象
         UserQueryVo userQueryVo = new UserQueryVo();
-        User user = new User();
-        user.setUsername("小龙女");
-        user.setSex("女");
+        UserCustom userCustom = new UserCustom();
+        //User user = new User();
+        userCustom.setUsername("小尼");
+        //System.out.println(userCustom);
+        userCustom.setSex("男");
         //传入多个id
         ArrayList<Integer> ids = new ArrayList<>();
-        ids.add(99);
-        ids.add(88);
+        ids.add(34);
+        ids.add(30);
+        ids.add(29);
+        ids.add(2);
         //将ids通过userQueryVo传入statement中
         userQueryVo.setIds(ids);
-        userQueryVo.setUser(user);
+        userQueryVo.setUserCustom(userCustom);
         //调用方法完成多条件查询
         List<UserQueryVo> userQueryVoList = userMapper.findUserList(userQueryVo);
         System.out.println(userQueryVoList.size());
@@ -151,6 +157,56 @@ public class UserMapperTest {
         User user = userMapper.findUserByIdResultMap(1);
         System.out.println(user);
         //释放资源
+        sqlSession.close();
+    }
+    //传递单个 List
+    @Test
+    public void testselectUserByList(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        //构造查询条件
+        List<User> userList = new ArrayList<>();
+        User user = new User();
+        user.setId(1);
+        userList.add(user);
+        user = new User();
+        user.setId(66);
+        userList.add(user);
+        //传递userList列表查询用户列表
+        List<User> list =userMapper.selectUserByList(userList);
+        //关闭sqlSession
+        sqlSession.close();
+    }
+    //单个数组（数组中是 pojo）
+    @Test
+    public void testselectUserByArray(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        //构造查询条件List
+        Object[] userlist = new Object[2];
+        User user = new User();
+        user.setId(111);
+        userlist[0]=user;
+        user = new User();
+        user.setId(222);
+        userlist[1]=user;
+        //传递user对象查询用户列表
+        List<User>list = userMapper.selectUserByArray(userlist);
+        //关闭sqlSession
+        sqlSession.close();
+    }
+    //单个数组（数组中是字符串类型）
+    @Test
+    public void testselectUserByArrayString(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        //构造查询条件List
+        Object[] userlist = new Object[2];
+        userlist[0]="1";
+        userlist[1]="2";
+        //传递user对象查询用户列表
+        List<User>list = userMapper.selectUserByArrayString(userlist);
+        //关闭sqlSession
         sqlSession.close();
     }
 }
