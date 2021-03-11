@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bh.dao.impl.OrdersCustomMapper">
+    <!--查询所有订单-->
+    <select id="findOrdersList" resultType="com.bh.pojo.OrdersCustom">
+        select orders.*,user.username,user.address
+        from orders,user
+        where orders.user_id=user.id
+    </select>
+    <!--使用 resultMap，一对一查询所有订单-->
+    <select id="findOrdersListResultMap" resultMap="userOrderMap">
+        select orders.*,user.username,user.address
+        from orders,user
+        where orders.user_id=user.id
+    </select>
+    <resultMap id="userOrderMap" type="com.bh.pojo.Orders">
+        <!--orders-->
+        <id property="id" column="id"></id>
+        <result column="user_id" property="user_id"></result>
+        <result property="number" column="number"></result>
+        <association property="user" javaType="com.bh.pojo.User">
+            <!--user表-->
+            <id property="id" column="id"></id>
+            <result column="username" property="username"></result>
+            <result property="address" column="address"></result>
+        </association>
+    </resultMap>
+</mapper>

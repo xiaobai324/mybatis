@@ -23,6 +23,18 @@
     <!--<select id="findUserList" parameterType="com.bh.pojo.UserQueryVo" resultType="com.bh.pojo.User">
         select * from user where username=#{user.username} and sex=#{user.sex}
     </select>-->
+    <!--sql片段-->
+    <sql id="query_user_where">
+        <if test="userCustom!=null">
+
+            <if test="userCustom.sex!=null and userCustom.sex!=''">
+                and user.sex=#{userCustom.sex}
+            </if>
+            <if test="userCustom.username!=null and userCustom.username!=''">
+                and user.username like '%${userCustom.username}%'
+            </if>
+        </if>
+    </sql>
     <!--用户综合信息查询用户列表————动态sql拼接-->
     <select id="findUserList" parameterType="com.bh.pojo.UserQueryVo" resultType="com.bh.pojo.User">
         select * from user
@@ -33,16 +45,8 @@
                 #{id}
             </foreach>
         </if>-->
+            <include refid="query_user_where"></include>
 
-            <if test="userCustom!=null">
-
-                <if test="userCustom.sex!=null and userCustom.sex!=''">
-                    and user.sex=#{userCustom.sex}
-                </if>
-                <if test="userCustom.username!=null and userCustom.username!=''">
-                    and user.username like '%${userCustom.username}%'
-                </if>
-            </if>
         </where>
     </select>
     <!--传递 HashMap 综合查询用户信息-->
@@ -90,7 +94,7 @@
     
     <!-- 传递数组综合查询用户信息————数组中是字符串类型 -->
     <!-- 传递数组综合查询用户信息 -->
-    <select id="selectUserByArrayString" parameterType="Object[]" resultType="com.bh.pojo.User">
+    <select id="selectUserByArray_" parameterType="Object[]" resultType="com.bh.pojo.User">
         select * from user
         <where>
             <!-- 传递数组 -->
@@ -101,5 +105,6 @@
             </if>
         </where>
     </select>
+
 
 </mapper>

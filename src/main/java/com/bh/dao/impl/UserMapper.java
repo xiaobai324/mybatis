@@ -30,5 +30,5 @@ public interface UserMapper {
 
     List<User> selectUserByArray(Object[] userlist);
 
-    List<User> selectUserByArrayString(Object[] userlist);
+    List<User> selectUserByArray_(Object[] userlist);
 }

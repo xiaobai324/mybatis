@@ -202,11 +202,12 @@ public class UserMapperTest {
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
         //构造查询条件List
         Object[] userlist = new Object[2];
-        userlist[0]="1";
+        userlist[0]="1 ";
         userlist[1]="2";
         //传递user对象查询用户列表
-        List<User>list = userMapper.selectUserByArrayString(userlist);
+        List<User>list = userMapper.selectUserByArray_(userlist);
         //关闭sqlSession
         sqlSession.close();
     }
+
 }
