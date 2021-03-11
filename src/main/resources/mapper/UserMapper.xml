@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace为命名空间，功能是对sql语句进行分类管理，隔离sql语句
+-->
+<mapper namespace="UserTest">
+    <!--通过id查询用户信息-->
+    <select id="findUserById" parameterType="int" resultType="com.bh.pojo.User">
+    select * from user where id=#{id }
+    </select>
+    <!--根据name模糊查询-->
+    <select id="findUserByName" parameterType="String" resultType="com.bh.pojo.User">
+        select * from user where username like '%${value}%'
+    </select>
+    <!--添加用户-->
+    <insert id="insertUser" parameterType="com.bh.pojo.User">
+        <selectKey keyProperty="id" order="AFTER" resultType="Integer">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into user (username,birthday,sex,address) values (#{username},#{birthday},#{sex},#{address})
+    </insert>
+    <!--使用 uuid 实现主键-->
+    <insert id="insertUserUUID" parameterType="com.bh.pojo.Person">
+        <selectKey resultType="String" order="BEFORE" keyProperty="id">
+            select uuid()
+        </selectKey>
+        insert into persion (id,username,sex,address) values (#{id},#{username},#{sex},#{address})
+    </insert>
+    <!--删除数据-->
+    <delete id="deleteUserById" parameterType="int">
+        delete from user where id=#{id}
+    </delete>
+    <!--修改数据-->
+    <update id="updateUser" parameterType="com.bh.pojo.User">
+        update user set username=#{username},birthday=#{birthday},sex=#{sex},address=#{address} where id=#{id}
+    </update>
+    <!--用户综合信息查询用户列表-->
+    <select id="findUserList" parameterType="com.bh.pojo.UserQueryVo" resultType="com.bh.pojo.User">
+        select * from user where username=#{user.username} and sex=#{user.sex}
+    </select>
+
+</mapper>
+

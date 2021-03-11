@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="dbConfig.properties"></properties>
+    <!--数据库配置环境（取代spring框架）-->
+    <environments default="development">
+        <environment id="development">
+            <!--使用jdbc事务-->
+            <transactionManager type="JDBC"></transactionManager>
+            <!--数据库连接-->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+                <!--<property name="driver" value="com.mysql.cj.jdbc.Driver"/>-->
+                <!--<property name="url" value="jdbc:mysql://localhost:3306/springmvc?serverTimezone=GMT%2B8&amp;characterEncoding=utf-8&amp;useSSL=FALSE"/>-->
+                <!--<property name="username" value="root"/>
+                <property name="password" value="123456"/>-->
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/UserMapper_.xml"/>
+    </mappers>
+</configuration>
