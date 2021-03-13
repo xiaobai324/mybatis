@@ -2,109 +2,43 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bh.dao.impl.UserMapper">
-    <!--根据id获取用户信息-->
+<!--namespace为命名空间，功能是对sql语句进行分类管理，隔离sql语句
+-->
+<mapper namespace="UserTest">
+    <!--通过id查询用户信息-->
     <select id="findUserById" parameterType="int" resultType="com.bh.pojo.User">
-        select * from user where id = #{id}
+    select * from user where id=#{id }
     </select>
-    <!-- 自定义条件查询用户列表 -->
-    <select id="findUserByUsername" parameterType="String" resultType="com.bh.pojo.User">
+    <!--根据name模糊查询-->
+    <select id="findUserByName" parameterType="String" resultType="com.bh.pojo.User">
         select * from user where username like '%${value}%'
     </select>
-    <!-- 添加用户 -->
+    <!--添加用户-->
     <insert id="insertUser" parameterType="com.bh.pojo.User">
         <selectKey keyProperty="id" order="AFTER" resultType="Integer">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into user(username,birthday,sex,address)
-        values(#{username},#{birthday},#{sex},#{address})
+        insert into user (username,birthday,sex,address) values (#{username},#{birthday},#{sex},#{address})
     </insert>
+    <!--使用 uuid 实现主键-->
+    <insert id="insertUserUUID" parameterType="com.bh.pojo.Person">
+        <selectKey resultType="String" order="BEFORE" keyProperty="id">
+            select uuid()
+        </selectKey>
+        insert into persion (id,username,sex,address) values (#{id},#{username},#{sex},#{address})
+    </insert>
+    <!--删除数据-->
+    <delete id="deleteUserById" parameterType="int">
+        delete from user where id=#{id}
+    </delete>
+    <!--修改数据-->
+    <update id="updateUser" parameterType="com.bh.pojo.User">
+        update user set username=#{username},birthday=#{birthday},sex=#{sex},address=#{address} where id=#{id}
+    </update>
     <!--用户综合信息查询用户列表-->
-    <!--<select id="findUserList" parameterType="com.bh.pojo.UserQueryVo" resultType="com.bh.pojo.User">
-        select * from user where username=#{user.username} and sex=#{user.sex}
-    </select>-->
-    <!--sql片段-->
-    <sql id="query_user_where">
-        <if test="userCustom!=null">
-
-            <if test="userCustom.sex!=null and userCustom.sex!=''">
-                and user.sex=#{userCustom.sex}
-            </if>
-            <if test="userCustom.username!=null and userCustom.username!=''">
-                and user.username like '%${userCustom.username}%'
-            </if>
-        </if>
-    </sql>
-    <!--用户综合信息查询用户列表————动态sql拼接-->
     <select id="findUserList" parameterType="com.bh.pojo.UserQueryVo" resultType="com.bh.pojo.User">
-        select * from user
-        /*where 1=1*/
-        <where>
-        <!--<if test="ids!=null and ids.size>0">
-            <foreach collection="ids" open="and id in(" close=")" item="id" separator=",">
-                #{id}
-            </foreach>
-        </if>-->
-            <include refid="query_user_where"></include>
-
-        </where>
+        select * from user where username=#{user.username} and sex=#{user.sex}
     </select>
-    <!--传递 HashMap 综合查询用户信息-->
-    <select id="findUserByHashMap" parameterType="java.util.Map" resultType="com.bh.pojo.User">
-        select * from user where id=#{id} and username like '%${username}%'
-    </select>
-    <!--输出简单类型-->
-    <select id="findUserByCount" parameterType="com.bh.pojo.User" resultType="int">
-        select count(1) from user
-    </select>
-    <!--根据 id 查询用户信息，使用 resultMap 输出-->
-    <resultMap id="userListResultMap" type="com.bh.pojo.User">
-        <id column="id_" property="id"></id>
-        <result column="username_" property="username"></result>
-        <result column="birthday_" property="birthday"></result>
-    </resultMap>
-    <select id="findUserByIdResultMap" parameterType="com.bh.pojo.User" resultMap="userListResultMap">
-        select id id_,username username_,birthday birthday_ from user where id=#{value}
-    </select>
-    <!--传递数组综合查询用户信息___传递单个 List-->
-    <select id="selectUserByList" parameterType="java.util.List" resultType="com.bh.pojo.User">
-        select * from user
-        <where>
-            <if test="list!=null">
-                <foreach collection="list" item="item" open="and id in(" separator="," close=")">
-                    #{item.id}
-                </foreach>
-            </if>
-        </where>
-
-    </select>
-    <!--传递数组综合查询用户信息___单个数组（数组中是 pojo)-->
-    <!-- 传递数组综合查询用户信息 -->
-    <select id="selectUserByArray" parameterType="Object[]" resultType="com.bh.pojo.User">
-        select * from user
-        <where>
-            <!-- 传递数组 -->
-            <if test="array!=null">
-                <foreach collection="array" index="index" item="item" open="and id in(" separator="," close=")">
-                    #{item.id}
-                </foreach>
-            </if>
-        </where>
-    </select>
-    
-    <!-- 传递数组综合查询用户信息————数组中是字符串类型 -->
-    <!-- 传递数组综合查询用户信息 -->
-    <select id="selectUserByArray_" parameterType="Object[]" resultType="com.bh.pojo.User">
-        select * from user
-        <where>
-            <!-- 传递数组 -->
-            <if test="array!=null">
-                <foreach collection="array" index="index" item="item" open="and id in(" separator="," close=")">
-                    #{item}
-                </foreach>
-            </if>
-        </where>
-    </select>
-
 
 </mapper>
+

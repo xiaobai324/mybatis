@@ -1,6 +1,7 @@
 package com.bh.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author:JL
@@ -12,6 +13,7 @@ public class User {
     private String sex; // 性别
     private Date birthday; // 出生日期
     private String address; // 住址
+    private List<Orders> orders;
 
     public int getId() {
         return id;
@@ -53,6 +55,14 @@ public class User {
         this.address = address;
     }
 
+    public List<Orders> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Orders> orders) {
+        this.orders = orders;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -61,6 +71,7 @@ public class User {
                 ", sex='" + sex + '\'' +
                 ", birthday=" + birthday +
                 ", address='" + address + '\'' +
+                ", orders=" + orders +
                 '}';
     }
 }

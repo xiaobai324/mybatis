@@ -1,6 +1,7 @@
 package com.bh;
 
-import com.bh.dao.impl.OrdersCustomMapper;
+import com.bh.dao.OrdersCustomMapper;
+import com.bh.pojo.Orderdetail;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -49,5 +50,33 @@ public class OrdersCustomMapperTest {
         System.out.println(ordersCustomMappers);
         //关闭连接，释放资源
         sqlSession.close();
+    }
+    @Test
+    //一对多查询:查询订单及订单下的详情信息
+    public void testFindOrdersDetailList(){
+        //创建sqlSession连接
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        //获取代理对象
+        OrdersCustomMapper ordersCustomMapper = sqlSession.getMapper(OrdersCustomMapper.class);
+        //调用方法完成功能
+        List<Orderdetail> orderdetailList = ordersCustomMapper.findOrdersDetailList();
+        System.out.println(orderdetailList.size());
+        System.out.println(orderdetailList);
+        //关闭连接
+        sqlSession.close();
+    }
+    //多对多，查询用户信息，关联查询订单，订单明细，商品信息
+    @Test
+    public void testFindUserOrderListResultMap(){
+        //创建sqlSession连接
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        //获取代理对象
+        OrdersCustomMapper ordersCustomMapper = sqlSession.getMapper(OrdersCustomMapper.class);
+        //调用方法完成功能
+        List list = ordersCustomMapper.findUserOrderListResultMap();
+        System.out.println(list.size());
+        System.out.println(list);
+        //关闭sqlSession
+        //sqlSession.close();
     }
 }

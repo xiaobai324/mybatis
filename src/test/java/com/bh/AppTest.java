@@ -2,7 +2,6 @@ package com.bh;
 
 import static org.junit.Assert.assertTrue;
 
-import com.bh.dao.impl.UserMapper;
 import com.bh.pojo.Person;
 import com.bh.pojo.User;
 import org.apache.ibatis.io.Resources;
@@ -14,7 +13,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

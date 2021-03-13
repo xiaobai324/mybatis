@@ -1,6 +1,6 @@
 package com.bh;
 
-import com.bh.dao.impl.UserMapper;
+import com.bh.dao.UserMapper;
 import com.bh.pojo.User;
 import com.bh.pojo.UserCustom;
 import com.bh.pojo.UserQueryVo;
@@ -11,6 +11,10 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +27,9 @@ import java.util.List;
  * @Author:JL
  * @Date:2021/3/10
  */
+@RunWith(SpringJUnit4ClassRunner.class)//如果没有会空指针异常
+//加载applicationContext.xml文件
+@ContextConfiguration(locations = "classpath:applicationContext.xml")
 public class UserMapperTest {
     //会话工厂
     private SqlSessionFactory sqlSessionFactory;
@@ -113,7 +120,7 @@ public class UserMapperTest {
         //释放资源
         sqlSession.close();
     }
-    //传递hashmap
+    //传递hashmap测试
     @Test
     public void testFindUserByHashMap(){
         //获取sqlSession
@@ -131,7 +138,7 @@ public class UserMapperTest {
         //关闭连接
         sqlSession.close();
     }
-    //输出简单类型
+    //输出简单类型测试
     @Test
     public void testFindUserCount(){
         //获取 session
@@ -162,7 +169,9 @@ public class UserMapperTest {
     //传递单个 List
     @Test
     public void testselectUserByList(){
+        //获取 sqlSession
         SqlSession sqlSession = sqlSessionFactory.openSession();
+        //获取接口对象
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
         //构造查询条件
         List<User> userList = new ArrayList<>();
@@ -181,6 +190,7 @@ public class UserMapperTest {
     @Test
     public void testselectUserByArray(){
         SqlSession sqlSession = sqlSessionFactory.openSession();
+        //获取接口对象
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
         //构造查询条件List
         Object[] userlist = new Object[2];
@@ -199,6 +209,7 @@ public class UserMapperTest {
     @Test
     public void testselectUserByArrayString(){
         SqlSession sqlSession = sqlSessionFactory.openSession();
+        //获取接口对象
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
         //构造查询条件List
         Object[] userlist = new Object[2];
@@ -208,6 +219,50 @@ public class UserMapperTest {
         List<User>list = userMapper.selectUserByArray_(userlist);
         //关闭sqlSession
         sqlSession.close();
+    }
+    //一级缓存测试
+    @Test
+    public void oneTest() throws Exception {
+        //获取sqlSession
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        //获取mapper接口的代理对象
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        User user1 = userMapper.findUserById(1);
+        System.out.println(user1);
+        //第二次查询，由于是同一个session则不再向数据发出语句直接从缓存取出
+        User user2 = userMapper.findUserById(1);
+        System.out.println(user2);
+        if (sqlSession != null) {
+            sqlSession.close();
+        }
+    }
+    //一级缓存测试2
+    @Test
+    public void twoTest() throws Exception {
+        //获取sqlSession
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        //获取mapper接口的代理对象
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        User user1 = userMapper.findUserById(1);
+        System.out.println(user1);
+        //执行更新
+        User user2 = new User();
+        user2.setId(1);
+        user2.setUsername("小红");
+        user2.setSex("女");
+        userMapper.updateUser(user2);
+        System.out.println(user2);
+        if (sqlSession != null) {
+            sqlSession.close();
+        }
+    }
+        //扫描器测试
+    @Autowired
+    private UserMapper userMapper;
+    @Test
+    public void test(){
+        User user =userMapper.findUserById(1);
+        System.out.println(user);
     }
 
 }

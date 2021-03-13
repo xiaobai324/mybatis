@@ -22,6 +22,7 @@
             </dataSource>
         </environment>
     </environments>
+    <!--加载映射文件-->
     <mappers>
         <mapper resource="mapper/UserMapper.xml"/>
         <mapper resource="mapper/UserMapper_.xml"/>

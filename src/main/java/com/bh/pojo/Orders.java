@@ -1,16 +1,19 @@
 package com.bh.pojo;
 
+import java.util.List;
+
 /**
  * @Author:JL
  * @Date:2021/3/11
  */
 public class Orders {
     private int id;
-    private int user_id;
-    private String number;
-    private String username;
-    private String address;
+    private int user_id;  //用户id
+    private String number; //订单号
+    private String username; //用户名
+    private String address; //地址
     private User user;
+    private List<Orderdetail> orderdetails;
 
     public int getId() {
         return id;
@@ -60,6 +63,14 @@ public class Orders {
         this.user = user;
     }
 
+    public List<Orderdetail> getOrderdetails() {
+        return orderdetails;
+    }
+
+    public void setOrderdetails(List<Orderdetail> orderdetails) {
+        this.orderdetails = orderdetails;
+    }
+
     @Override
     public String toString() {
         return "Orders{" +
@@ -69,6 +80,7 @@ public class Orders {
                 ", username='" + username + '\'' +
                 ", address='" + address + '\'' +
                 ", user=" + user +
+                ", orderdetails=" + orderdetails +
                 '}';
     }
 }
